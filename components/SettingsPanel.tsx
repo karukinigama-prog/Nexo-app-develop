@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, Brain, ScreenShare, MessageSquareText, Languages, Cpu, Trash2, Save, Check } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { NEXO_MODELS, type NexoModelId } from "@/lib/models";
+import { Github, Link2, useState, useEffect } from "react";
+import { Github, Link2, X, Brain, ScreenShare, MessageSquareText, Languages, Cpu, Trash2, Save, Check } from "lucide-react";
+import { Github, Link2, supabase } from "@/lib/supabase";
+import { Github, Link2, NEXO_MODELS, type NexoModelId } from "@/lib/models";
 
 interface UserSettings {
   memory_content: string;
@@ -39,6 +39,12 @@ export function SettingsPanel({
   const [saved, setSaved] = useState(false);
   const [memorySaving, setMemorySaving] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [githubConnected, setGithubConnected] = useState(false);
+  const [githubUsername, setGithubUsername] = useState('');
+  const [repos, setRepos] = useState<any[]>([]);
+  const [selectedRepo, setSelectedRepo] = useState('');
+  const [loadingRepos, setLoadingRepos] = useState(false);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -232,6 +238,63 @@ export function SettingsPanel({
               </select>
             </section>
 
+            
+            {/* GitHub Integration */}
+            <section className="border-t border-edge pt-5">
+              <div className="flex items-center gap-2 text-ink mb-3">
+                <Github className="h-4 w-4 text-cyan" />
+                <h3 className="font-display text-sm font-semibold">GitHub Connection</h3>
+              </div>
+              
+                <button
+                  onClick={() => {
+                    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+                    window.location.href = ;
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#24292e] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#2f363d]"
+                >
+                  <Github className="h-4 w-4" />
+                  Connect GitHub
+                </button>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between rounded-lg border border-edge bg-void/50 px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-xs font-bold text-ink">Connected as {githubUsername}</span>
+                    </div>
+                    <button 
+                      onClick={() => setGithubConnected(false)}
+                      className="text-[10px] font-bold text-red-400 hover:underline"
+                    >
+                      Disconnect
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-ink-faint">Active Repository</label>
+                    <select
+                      value={selectedRepo}
+                      onChange={(e) => {
+                        setSelectedRepo(e.target.value);
+                        // Save to settings
+                      }}
+                      className="w-full rounded-lg border border-edge bg-void px-3 py-2 text-sm text-ink focus:outline-none focus:border-cyan/50"
+                    >
+                      <option value="">Select a repository...</option>
+                      {repos.map((repo: any) => (
+                        <option key={repo.id} value={repo.full_name}>
+                          {repo.full_name}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-[10px] text-ink-muted leading-relaxed">
+                      Nexo Coder will use this repository to read and edit code.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </section>
             {/* Clear History */}
             <section className="border-t border-edge pt-5">
               <button
