@@ -1,9 +1,9 @@
 "use client";
 
-import { Github, Link2, useState, useEffect } from "react";
-import { Github, Link2, X, Brain, ScreenShare, MessageSquareText, Languages, Cpu, Trash2, Save, Check } from "lucide-react";
-import { Github, Link2, supabase } from "@/lib/supabase";
-import { Github, Link2, NEXO_MODELS, type NexoModelId } from "@/lib/models";
+import { useState, useEffect } from "react";
+import { X, Brain, ScreenShare, MessageSquareText, Languages, Cpu, Trash2, Save, Check, Github, Link2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { NEXO_MODELS, type NexoModelId } from "@/lib/models";
 
 interface UserSettings {
   memory_content: string;
@@ -39,52 +39,77 @@ export function SettingsPanel({
   const [saved, setSaved] = useState(false);
   const [memorySaving, setMemorySaving] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // GitHub States
   const [githubConnected, setGithubConnected] = useState(false);
   const [githubUsername, setGithubUsername] = useState('');
   const [repos, setRepos] = useState<any[]>([]);
   const [selectedRepo, setSelectedRepo] = useState('');
-  const [loadingRepos, setLoadingRepos] = useState(false);
-
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (open && sessionId) loadSettings();
+    async function loadSettings() {
+      if (!sessionId) return;
+      setLoading(true);
+      try {
+        const { data } = await supabase
+          .from("user_settings")
+          .select("*")
+          .eq("session_id", sessionId)
+          .maybeSingle();
+
+        if (data) {
+          const loaded = {
+            memory_content: data.memory_content || "",
+            screen_share_enabled: data.screen_share_enabled ?? false,
+            response_length: data.response_length || "balanced",
+            language_preference: data.language_preference || "auto",
+            default_model: data.default_model || "nexio-1.1",
+          };
+          setSettings(loaded);
+          setMemoryDraft(loaded.memory_content);
+        }
+
+        // Check GitHub connection
+        const ghRes = await fetch(`/api/github/repos?sessionId=${sessionId}`);
+        if (ghRes.ok) {
+          const ghData = await ghRes.json();
+          setGithubConnected(true);
+          setGithubUsername(ghData.username || '');
+          setRepos(ghData.repos || []);
+          setSelectedRepo(ghData.selectedRepo || '');
+        }
+      } catch (err) {
+        console.error("Error loading settings:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (open) {
+      loadSettings();
+    }
   }, [open, sessionId]);
 
-  async function loadSettings() {
-    setLoading(true);
-    const { data } = await supabase
-      .from("user_settings")
-      .select("*")
-      .eq("session_id", sessionId)
-      .maybeSingle();
+  async function saveSettings(newSettings: UserSettings) {
+    setSettings(newSettings);
+    if (!sessionId) return;
 
-    if (data) {
-      const loaded = {
-        memory_content: data.memory_content ?? "",
-        screen_share_enabled: data.screen_share_enabled ?? false,
-        response_length: data.response_length ?? "balanced",
-        language_preference: data.language_preference ?? "auto",
-        default_model: data.default_model ?? "nexio-1.1",
-      };
-      setSettings(loaded);
-      setMemoryDraft(loaded.memory_content);
+    try {
+      await supabase.from("user_settings").upsert({
+        session_id: sessionId,
+        ...newSettings,
+        updated_at: new Date().toISOString(),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+      onSettingsChange?.(newSettings);
+    } catch (err) {
+      console.error("Error saving settings:", err);
     }
-    setLoading(false);
   }
 
-  async function saveSettings(next: UserSettings) {
-    setSettings(next);
-    await supabase.from("user_settings").upsert(
-      { session_id: sessionId, ...next, updated_at: new Date().toISOString() },
-      { onConflict: "session_id" }
-    );
-    onSettingsChange?.(next);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 1500);
-  }
-
-  async function handleSaveMemory() {
+  async function saveMemory() {
     setMemorySaving(true);
     await saveSettings({ ...settings, memory_content: memoryDraft });
     setMemorySaving(false);
@@ -113,40 +138,118 @@ export function SettingsPanel({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 flex items-center justify-between border-b border-edge bg-panel px-5 py-4">
-          <h2 className="font-display text-lg font-bold text-ink">Settings</h2>
-          <button onClick={onClose} className="text-ink-faint hover:text-ink" aria-label="Close">
+          <div className="flex items-center gap-2">
+            <h2 className="font-display text-lg font-black text-ink tracking-tight uppercase">Nexus Settings</h2>
+            <div className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-full p-2 text-ink-faint hover:bg-void hover:text-ink transition"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {loading ? (
-          <div className="p-5 text-sm text-ink-muted">Loading…</div>
+          <div className="flex h-64 items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan border-t-transparent" />
+          </div>
         ) : (
-          <div className="space-y-6 p-5">
-            {/* Long-term Memory */}
+          <div className="space-y-8 p-6 pb-24">
+            {/* Memory Section */}
             <section>
-              <div className="flex items-center gap-2 text-ink">
-                <Brain className="h-4 w-4 text-cyan" />
-                <h3 className="font-display text-sm font-semibold">Long-term Memory</h3>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 text-ink">
+                  <Brain className="h-4 w-4 text-cyan" />
+                  <h3 className="font-display text-sm font-semibold">NEXO Memory</h3>
+                </div>
+                {memoryDirty && (
+                  <button
+                    onClick={saveMemory}
+                    disabled={memorySaving}
+                    className="flex items-center gap-1.5 text-[10px] font-black text-cyan hover:text-cyan-dim uppercase tracking-widest"
+                  >
+                    <Save className="h-3 w-3" /> Save Changes
+                  </button>
+                )}
               </div>
-              <p className="mt-1 text-xs text-ink-muted">
-                Add anything you want NEXO to always remember about you — your name, preferences, or context. Tap Save to store it permanently.
-              </p>
               <textarea
                 value={memoryDraft}
                 onChange={(e) => setMemoryDraft(e.target.value)}
-                placeholder="e.g. My name is Hasith, I'm a developer from Sri Lanka…"
-                rows={3}
-                className="mt-2 w-full resize-none rounded-lg border border-edge bg-void px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-cyan/50"
+                placeholder="Tell NEXO something to remember about you (e.g., 'I prefer TypeScript', 'My name is Alex')..."
+                className="w-full min-h-[120px] rounded-2xl border border-edge bg-void/50 p-4 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-cyan/50 resize-none transition-all"
               />
-              <button
-                onClick={handleSaveMemory}
-                disabled={!memoryDirty || memorySaving}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-cyan py-2 text-sm font-semibold text-white transition hover:bg-cyan-dim disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <Save className="h-4 w-4" />
-                {memorySaving ? "Saving…" : memoryDirty ? "Save memory" : "Saved"}
-              </button>
+              <p className="mt-2 text-[10px] text-ink-muted leading-relaxed">
+                NEXO uses this context across all chats to provide a more personalized experience.
+              </p>
+            </section>
+
+            {/* GitHub Integration */}
+            <section className="border-t border-edge pt-5">
+              <div className="flex items-center gap-2 text-ink mb-3">
+                <Github className="h-4 w-4 text-cyan" />
+                <h3 className="font-display text-sm font-semibold">GitHub Connection</h3>
+              </div>
+              
+              {!githubConnected ? (
+                <button
+                  onClick={() => {
+                    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+                    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=repo,user&state=${sessionId}`;
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#24292e] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#2f363d]"
+                >
+                  <Github className="h-4 w-4" />
+                  Connect GitHub
+                </button>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between rounded-lg border border-edge bg-void/50 px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-xs font-bold text-ink">Connected as {githubUsername}</span>
+                    </div>
+                    <button 
+                      onClick={async () => {
+                        await fetch(`/api/github/auth?sessionId=${sessionId}`, { method: 'DELETE' });
+                        setGithubConnected(false);
+                        setRepos([]);
+                        setSelectedRepo('');
+                      }}
+                      className="text-[10px] font-bold text-red-400 hover:underline"
+                    >
+                      Disconnect
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-ink-faint">Active Repository</label>
+                    <select
+                      value={selectedRepo}
+                      onChange={async (e) => {
+                        const repo = e.target.value;
+                        setSelectedRepo(repo);
+                        await fetch('/api/github/repos', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ sessionId, selectedRepo: repo })
+                        });
+                      }}
+                      className="w-full rounded-lg border border-edge bg-void px-3 py-2 text-sm text-ink focus:outline-none focus:border-cyan/50"
+                    >
+                      <option value="">Select a repository...</option>
+                      {repos.map((repo: any) => (
+                        <option key={repo.id} value={repo.full_name}>
+                          {repo.full_name}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-[10px] text-ink-muted leading-relaxed">
+                      Nexo Coder will use this repository to read and edit code.
+                    </p>
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* Screen Share */}
@@ -238,63 +341,6 @@ export function SettingsPanel({
               </select>
             </section>
 
-            
-            {/* GitHub Integration */}
-            <section className="border-t border-edge pt-5">
-              <div className="flex items-center gap-2 text-ink mb-3">
-                <Github className="h-4 w-4 text-cyan" />
-                <h3 className="font-display text-sm font-semibold">GitHub Connection</h3>
-              </div>
-              
-                <button
-                  onClick={() => {
-                    const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-                    window.location.href = ;
-                  }}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#24292e] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#2f363d]"
-                >
-                  <Github className="h-4 w-4" />
-                  Connect GitHub
-                </button>
-              ) : (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between rounded-lg border border-edge bg-void/50 px-3 py-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-xs font-bold text-ink">Connected as {githubUsername}</span>
-                    </div>
-                    <button 
-                      onClick={() => setGithubConnected(false)}
-                      className="text-[10px] font-bold text-red-400 hover:underline"
-                    >
-                      Disconnect
-                    </button>
-                  </div>
-                  
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-ink-faint">Active Repository</label>
-                    <select
-                      value={selectedRepo}
-                      onChange={(e) => {
-                        setSelectedRepo(e.target.value);
-                        // Save to settings
-                      }}
-                      className="w-full rounded-lg border border-edge bg-void px-3 py-2 text-sm text-ink focus:outline-none focus:border-cyan/50"
-                    >
-                      <option value="">Select a repository...</option>
-                      {repos.map((repo: any) => (
-                        <option key={repo.id} value={repo.full_name}>
-                          {repo.full_name}
-                        </option>
-                      ))}
-                    </select>
-                    <p className="text-[10px] text-ink-muted leading-relaxed">
-                      Nexo Coder will use this repository to read and edit code.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </section>
             {/* Clear History */}
             <section className="border-t border-edge pt-5">
               <button
