@@ -1,14 +1,7 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
 
 // GET /api/chats?sessionId=xxx — list all chats for a session
 export async function GET(req: NextRequest) {
@@ -19,7 +12,6 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  const supabase = getSupabase();
   const { data, error } = await supabase
     .from("chats")
     .select("*")
@@ -46,7 +38,6 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const supabase = getSupabase();
   const { data, error } = await supabase
     .from("chats")
     .insert({
@@ -77,7 +68,6 @@ export async function PATCH(req: NextRequest) {
     });
   }
 
-  const supabase = getSupabase();
   const { data, error } = await supabase
     .from("chats")
     .update({ title })
@@ -103,7 +93,6 @@ export async function DELETE(req: NextRequest) {
     });
   }
 
-  const supabase = getSupabase();
   const { error } = await supabase.from("chats").delete().eq("id", id);
 
   if (error) {
