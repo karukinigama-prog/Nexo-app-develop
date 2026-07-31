@@ -1,14 +1,15 @@
-import { createClient } from "@supabase/supabase-js";
+// Neon PostgreSQL client — replaces Supabase
+import { neon } from "@neondatabase/serverless";
 
-// These are public (client-exposed) values. The env vars take precedence when
-// present; the fallbacks keep the app working in every environment.
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://apvqebqigqirmvemhnmz.supabase.co";
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwdnFlYnFpZ3Fpcm12ZW1obm16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NTEyOTksImV4cCI6MjA5OTQyNzI5OX0.J8PvV0dRQmgRZMptcUB0lLlZPKJjpglZAl0tbCnN0bs";
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL environment variable is not set");
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const sql = neon(connectionString);
+
+// Legacy alias kept so any remaining imports of `supabase` still resolve
+export const supabase = { sql };
 
 export interface DbChat {
   id: string;
