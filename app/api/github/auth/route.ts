@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { sql } from "@/lib/db";
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -23,20 +16,12 @@ export async function GET(req: NextRequest) {
   try {
     const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        client_id: GITHUB_CLIENT_ID,
-        client_secret: GITHUB_CLIENT_SECRET,
-        code,
-      }),
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ client_id: GITHUB_CLIENT_ID, client_secret: GITHUB_CLIENT_SECRET, code }),
     });
 
     const tokenData = await tokenRes.json();
     const accessToken = tokenData.access_token;
-
     if (!accessToken) {
       return NextResponse.json({ error: "Failed to get access token" }, { status: 500 });
     }
@@ -46,13 +31,14 @@ export async function GET(req: NextRequest) {
     });
     const userData = await userRes.json();
 
-    const supabase = getSupabase();
-    await supabase.from("user_github_tokens").upsert({
-      session_id: sessionId,
-      access_token: accessToken,
-      github_username: userData.login,
-      updated_at: new Date().toISOString(),
-    });
+    await sql`
+      INSERT INTO user_github_tokens (session_id, access_token, github_username, updated_at)
+      VALUES (${sessionId}, ${accessToken}, ${userData.login}, now())
+      ON CONFLICT (session_id) DO UPDATE
+      SET access_token = EXCLUDED.access_token,
+          github_username = EXCLUDED.github_username,
+          updated_at = now()
+    `;
 
     return NextResponse.redirect(new URL("/?github=success", req.url));
   } catch (err) {
@@ -64,7 +50,6 @@ export async function DELETE(req: NextRequest) {
   const sessionId = req.nextUrl.searchParams.get("sessionId");
   if (!sessionId) return NextResponse.json({ error: "Missing sessionId" }, { status: 400 });
 
-  const supabase = getSupabase();
-  await supabase.from("user_github_tokens").delete().eq("session_id", sessionId);
+  await sql`DELETE FROM user_github_tokens WHERE session_id = ${sessionId}`;
   return NextResponse.json({ success: true });
 }

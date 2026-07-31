@@ -58,7 +58,7 @@ export function AuthModal({
       setError(signInError.message);
       return;
     }
-    if (data.user) {
+    if (data?.user) {
       onSuccess(false);
       handleClose();
     }
@@ -102,12 +102,12 @@ export function AuthModal({
       setError(signUpError.message);
       return;
     }
-    if (data.session) {
+    if (data?.session) {
       onSuccess(true);
       handleClose();
       return;
     }
-    if (data.user) {
+    if (data?.user) {
       setError(
         "Account created! Please check your email to confirm your address, then sign in.",
       );

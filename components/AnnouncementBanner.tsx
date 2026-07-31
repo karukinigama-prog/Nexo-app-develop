@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Sparkles, X } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 import { Signal } from "./Signal";
 
 interface Announcement {
@@ -19,22 +18,7 @@ export function AnnouncementBanner() {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    async function load() {
-      const { data } = await supabase
-        .from("announcements")
-        .select("id, title, message")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (data) {
-        setAnnouncement(data);
-        const wasDismissed = localStorage.getItem(DISMISS_KEY_PREFIX + data.id);
-        setDismissed(!!wasDismissed);
-      }
-    }
-    load();
+    // Announcements are managed server-side; no-op for now.
   }, []);
 
   function handleDismiss(e: React.MouseEvent) {

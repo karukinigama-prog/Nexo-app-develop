@@ -431,8 +431,8 @@ export default function ChatPage() {
 
         <AnnouncementBanner />
 
-        <div className="flex flex-1 overflow-hidden">
-          <div className={`flex flex-1 flex-col transition-all duration-500 ${isCoderMode && lastExtractedCode ? 'w-1/2' : 'w-full'}`}>
+        <div className={`flex flex-1 overflow-hidden ${isCoderMode && lastExtractedCode ? 'flex-col md:flex-row' : ''}`}>
+          <div className={`flex flex-col transition-all duration-500 ${isCoderMode && lastExtractedCode ? 'flex-1 min-h-0 md:w-1/2 md:flex-none' : 'flex-1'}`}>
             <div ref={scrollRef} className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar">
               <div className="mx-auto max-w-3xl px-4 py-8">
                 {messages.length === 0 ? (
@@ -501,7 +501,7 @@ export default function ChatPage() {
 
           {/* Nexo Coder Side Panel */}
           {isCoderMode && lastExtractedCode && (
-            <div className="w-1/2 border-l border-edge bg-void/50 p-4 animate-fade-left">
+            <div className="h-[45vh] md:h-auto md:w-1/2 border-t md:border-t-0 md:border-l border-edge bg-void/50 p-4 animate-fade-left flex-shrink-0">
               <NexoCoder 
                 code={lastExtractedCode.code}
                 language={lastExtractedCode.lang}

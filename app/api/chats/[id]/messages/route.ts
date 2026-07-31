@@ -1,37 +1,28 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { sql } from "@/lib/db";
 
 export const runtime = "nodejs";
 
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
-
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = getSupabase();
-  const { data, error } = await supabase
-    .from("messages")
-    .select("id, role, content, model_id, created_at")
-    .eq("chat_id", params.id)
-    .order("created_at", { ascending: true })
-    .limit(200);
-
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+  try {
+    const messages = await sql`
+      SELECT id, role, content, model_id, created_at
+      FROM messages
+      WHERE chat_id = ${params.id}
+      ORDER BY created_at ASC
+      LIMIT 200
+    `;
+    return new Response(JSON.stringify({ messages }), {
+      status: 200,
+      headers: { "Cache-Control": "no-store" },
     });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Database error";
+    return new Response(JSON.stringify({ error: message }), { status: 500 });
   }
-
-  return new Response(JSON.stringify({ messages: data }), {
-    status: 200,
-    headers: { "Cache-Control": "no-store" },
-  });
 }
 
 export async function POST(
@@ -47,29 +38,20 @@ export async function POST(
     });
   }
 
-  const supabase = getSupabase();
+  try {
+    const [message] = await sql`
+      INSERT INTO messages (chat_id, role, content, model_id)
+      VALUES (${params.id}, ${role}, ${content}, ${modelId ?? null})
+      RETURNING *
+    `;
 
-  const { data, error } = await supabase
-    .from("messages")
-    .insert({
-      chat_id: params.id,
-      role,
-      content,
-      model_id: modelId || null,
-    })
-    .select()
-    .single();
+    await sql`
+      UPDATE chats SET updated_at = now() WHERE id = ${params.id}
+    `;
 
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+    return new Response(JSON.stringify({ message }), { status: 201 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Database error";
+    return new Response(JSON.stringify({ error: message }), { status: 500 });
   }
-
-  await supabase
-    .from("chats")
-    .update({ updated_at: new Date().toISOString() })
-    .eq("id", params.id);
-
-  return new Response(JSON.stringify({ message: data }), { status: 201 });
 }
