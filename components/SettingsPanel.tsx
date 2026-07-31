@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { X, Brain, ScreenShare, MessageSquareText, Languages, Cpu, Trash2, Save, Check, Github, Link2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 import { NEXO_MODELS, type NexoModelId } from "@/lib/models";
 
 interface UserSettings {
@@ -52,11 +51,8 @@ export function SettingsPanel({
       if (!sessionId) return;
       setLoading(true);
       try {
-        const { data } = await supabase
-          .from("user_settings")
-          .select("*")
-          .eq("session_id", sessionId)
-          .maybeSingle();
+        const res = await fetch(`/api/settings?sessionId=${sessionId}`);
+        const data = res.ok ? await res.json() : null;
 
         if (data) {
           const loaded = {
@@ -96,10 +92,10 @@ export function SettingsPanel({
     if (!sessionId) return;
 
     try {
-      await supabase.from("user_settings").upsert({
-        session_id: sessionId,
-        ...newSettings,
-        updated_at: new Date().toISOString(),
+      await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, ...newSettings }),
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
