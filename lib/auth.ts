@@ -15,11 +15,17 @@ export interface SignUpDetails {
   birthday: string;
 }
 
-export async function signUp(_details: SignUpDetails) {
+export async function signUp(_details: SignUpDetails): Promise<{
+  data: { user: AuthUser | null; session: { user: AuthUser } | null } | null;
+  error: Error | null;
+}> {
   return { data: null, error: new Error("Auth not configured") };
 }
 
-export async function signIn(_email: string, _password: string) {
+export async function signIn(_email: string, _password: string): Promise<{
+  data: { user: AuthUser | null } | null;
+  error: Error | null;
+}> {
   return { data: null, error: new Error("Auth not configured") };
 }
 
