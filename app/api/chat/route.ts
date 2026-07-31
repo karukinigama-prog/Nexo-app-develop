@@ -11,8 +11,7 @@ interface IncomingMessage {
   content: string;
 }
 
-const GITHUB_ENDPOINT = "https://models.github.ai/inference/chat/completions";
-const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+const OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const DAILY_MESSAGE_LIMIT = 50;
 const CODER_DAILY_LIMIT = 5;
 
@@ -101,21 +100,18 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const apiKey =
-      config.provider === "github"
-        ? process.env.GITHUB_MODELS_TOKEN
-        : process.env.GROQ_API_KEY;
+    const apiKey = process.env.OPENROUTER_API_KEY;
 
     if (!apiKey) {
       return new Response(
         JSON.stringify({
-          error: `Missing API key for provider: ${config.provider}. Set it in your environment variables.`,
+          error: "Missing OPENROUTER_API_KEY environment variable.",
         }),
         { status: 500 }
       );
     }
 
-    const endpoint = config.provider === "github" ? GITHUB_ENDPOINT : GROQ_ENDPOINT;
+    const endpoint = OPENROUTER_ENDPOINT;
 
     const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
     const webContext = lastUserMessage
@@ -136,6 +132,8 @@ export async function POST(req: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
+        "HTTP-Referer": "https://nexo.ai",
+        "X-Title": "NEXO AI",
       },
       body: JSON.stringify({
         model: config.model,
