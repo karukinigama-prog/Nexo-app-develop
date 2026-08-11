@@ -1,285 +1,270 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { ArrowUp, Menu, Mic, Plus, Square, X, Paperclip } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
+import { Send, Mic, X, Loader2, Paperclip, Smile, Zap, Menu } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { useChat } from "@/hooks/useChat";
+import { useModels } from "@/hooks/useModels";
+import { ModelPicker } from "./ModelPicker";
 import { ModelSelectorChip } from "./ModelSelectorChip";
-import type { NexoModelId } from "@/lib/models";
-
-const WAVE_BAR_COUNT = 24;
-const WAVE_MIN_HEIGHT = 4;
-const WAVE_MAX_HEIGHT = 32;
+import { TypingIndicator } from "./TypingIndicator";
+import { NexoCoder } from "./NexoCoder";
+import { Signal } from "./Signal";
 
 export function ChatInput({
-  value,
-  onChange,
-  onSend,
-  disabled,
-  onOpenSidebar,
-  selectedModel,
-  onSelectModel,
-  unlockedTiers,
-  onAttach,
-  attachedFile,
-  onRemoveAttach,
-  isStreaming,
+  chatId,
+  isLoading,
+  onSendMessage,
+  onNewChat,
+  enabled = true,
+  showModelPicker = true,
+  className = "",
 }: {
-  value: string;
-  onChange: (v: string) => void;
-  onSend: () => void;
-  disabled: boolean;
-  onOpenSidebar?: () => void;
-  selectedModel: NexoModelId;
-  onSelectModel: (id: NexoModelId) => void;
-  unlockedTiers?: string[];
-  onAttach: (file: File) => void;
-  attachedFile?: File | null;
-  onRemoveAttach?: () => void;
-  isStreaming?: boolean;
+  chatId: string | null;
+  isLoading: boolean;
+  onSendMessage: (content: string, modelId?: string) => Promise<void>;
+  onNewChat: () => void;
+  enabled?: boolean;
+  showModelPicker?: boolean;
+  className?: string;
 }) {
-  const ref = useRef<HTMLTextAreaElement>(null);
+  const [input, setInput] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+  const [showCoder, setShowCoder] = useState(false);
+  const [attachedImages, setAttachedImages] = useState<File[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
+  const { selectedModel, setSelectedModel } = useModels();
 
-  const [isListening, setIsListening] = useState(false);
-  const [waveLevels, setWaveLevels] = useState<number[]>(
-    Array(WAVE_BAR_COUNT).fill(WAVE_MIN_HEIGHT)
-  );
-  const recognitionRef = useRef<any>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const rafRef = useRef<number>(0);
-
-  function stopListening() {
-    setIsListening(false);
-    cancelAnimationFrame(rafRef.current);
-    try {
-      if (recognitionRef.current) {
-        recognitionRef.current.onresult = null;
-        recognitionRef.current.onerror = null;
-        recognitionRef.current.onend = null;
-        recognitionRef.current.stop();
-      }
-    } catch {
-      // recognition may already be stopped
+  const handleHeight = useCallback(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
     }
-    recognitionRef.current = null;
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    audioCtxRef.current?.close().catch(() => {});
-    audioCtxRef.current = null;
-    setWaveLevels(Array(WAVE_BAR_COUNT).fill(WAVE_MIN_HEIGHT));
-  }
-
-  async function startListening() {
-    if (isListening) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-
-      const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
-      const audioCtx = new AudioCtx();
-      audioCtxRef.current = audioCtx;
-      const source = audioCtx.createMediaStreamSource(stream);
-      const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 64;
-      source.connect(analyser);
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-      function tick() {
-        if (!audioCtxRef.current) return;
-        analyser.getByteFrequencyData(dataArray);
-        const bars = Array.from({ length: WAVE_BAR_COUNT }, (_, i) => {
-          const idx = Math.floor((i / WAVE_BAR_COUNT) * dataArray.length);
-          const magnitude = dataArray[idx] / 255;
-          return Math.max(WAVE_MIN_HEIGHT, magnitude * WAVE_MAX_HEIGHT);
-        });
-        setWaveLevels(bars);
-        rafRef.current = requestAnimationFrame(tick);
-      }
-      tick();
-
-      const SpeechRecognitionCtor =
-        (window as any).SpeechRecognition ||
-        (window as any).webkitSpeechRecognition;
-
-      if (SpeechRecognitionCtor) {
-        const recognition = new SpeechRecognitionCtor();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "en-US";
-
-        let finalTranscript = "";
-        recognition.onresult = (event: any) => {
-          let interim = "";
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-              finalTranscript += transcript + " ";
-            } else {
-              interim += transcript;
-            }
-          }
-          const currentText = (finalTranscript + interim).trim();
-          if (currentText) {
-            onChange(currentText);
-          }
-        };
-        recognition.onerror = (e: any) => {
-          console.error("Speech recognition error", e);
-          stopListening();
-        };
-        recognition.onend = () => {
-          if (isListening) {
-            try {
-              recognition.start();
-            } catch {
-              setIsListening(false);
-            }
-          }
-        };
-        recognition.start();
-        recognitionRef.current = recognition;
-      }
-
-      setIsListening(true);
-    } catch (err) {
-      console.error("Mic access error", err);
-    }
-  }
-
-  function handleMicClick() {
-    if (isListening) {
-      stopListening();
-    } else {
-      startListening();
-    }
-  }
-
-  useEffect(() => {
-    return () => stopListening();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+  useEffect(() => {
+    handleHeight();
+  }, [input, handleHeight]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() && attachedImages.length === 0) return;
+    if (!enabled) return;
+
+    const content = input.trim();
+    const images = [...attachedImages];
+    setInput("");
+    setAttachedImages([]);
+    handleHeight();
+
+    await onSendMessage(content, selectedModel?.id);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if ((value.trim() || attachedFile) && !disabled) onSend();
+      handleSubmit(e as unknown as React.FormEvent);
     }
-  }
+  };
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) onAttach(file);
-    e.target.value = "";
-  }
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const validFiles = files.filter((f) => f.type.startsWith("image/"));
+    setAttachedImages((prev) => [...prev, ...validFiles].slice(0, 4));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeImage = (index: number) => {
+    setAttachedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: "audio/webm" });
+        // TODO: Send audio for transcription
+        console.log("Audio recorded:", audioBlob);
+      };
+
+      setMediaRecorder(recorder);
+      setAudioChunks([]);
+      recorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      console.error("Failed to start recording:", err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+      setIsRecording(false);
+    }
+  };
+
+  const handleModelSelect = (modelId: string) => {
+    setSelectedModel(modelId);
+    setShowPicker(false);
+  };
 
   return (
-    <div className="px-4 py-2">
-      <div className="mx-auto max-w-3xl">
-        <div className="relative rounded-2xl border border-edge bg-panel px-3 pb-2.5 pt-3 shadow-sm focus-within:border-cyan/50 transition-all duration-300">
-          
-          {attachedFile && (
-            <div className="mb-2 flex items-center gap-2 rounded-lg bg-void/50 p-2 animate-fade-up">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-cyan/10 text-cyan">
-                <Paperclip className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="truncate text-xs font-bold text-ink">{attachedFile.name}</p>
-                <p className="text-[10px] text-ink-faint uppercase">{(attachedFile.size / 1024).toFixed(1)} KB</p>
-              </div>
-              <button 
-                onClick={onRemoveAttach}
-                className="p-1 text-ink-faint hover:text-red-500 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
+    <form onSubmit={handleSubmit} className={`${className} w-full`}>
+      <div className="relative flex flex-col gap-2">
+        {/* Model Selector Chip */}
+        {showModelPicker && (
+          <ModelSelectorChip
+            selectedModel={selectedModel}
+            onClick={() => setShowPicker(!showPicker)}
+            className="self-start ml-1"
+          />
+        )}
 
-          {isListening ? (
-            <div className="flex h-[38px] items-center justify-center gap-[4px] px-1 py-1">
-              {waveLevels.map((height, i) => (
-                <span
-                  key={i}
-                  className="w-[3px] flex-shrink-0 rounded-full bg-cyan shadow-[0_0_10px_rgba(0,229,255,0.5)] transition-[height] duration-75"
-                  style={{ height: `${height}px` }}
-                />
+        {/* Model Picker Dropdown */}
+        {showModelPicker && showPicker && (
+          <ModelPicker
+            selectedModel={selectedModel}
+            onSelect={handleModelSelect}
+            onClose={() => setShowPicker(false)}
+          />
+        )}
+
+        {/* Main Input Area */}
+        <div className="relative flex items-end gap-2 bg-white/5 dark:bg-gray-900/50 backdrop-blur-sm border border-white/10 dark:border-gray-700/50 rounded-2xl p-2 transition-all duration-200">
+          {/* Attached Images Preview */}
+          {attachedImages.length > 0 && (
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 pr-1">
+              {attachedImages.map((file, index) => (
+                <div key={index} className="relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden">
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt={`Attached image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                    aria-label="Remove image"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
               ))}
             </div>
-          ) : (
-            <textarea
-              ref={ref}
-              rows={1}
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Chat with NEXO AI…"
-              className="max-h-40 w-full resize-none bg-transparent px-1 py-1 text-sm font-medium text-ink placeholder:text-ink-faint focus:outline-none"
-            />
           )}
 
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              {onOpenSidebar && (
-                <button
-                  onClick={onOpenSidebar}
-                  className="flex-shrink-0 text-ink-muted hover:text-ink md:hidden"
-                  aria-label="Open menu"
-                >
-                  <Menu className="h-5 w-5" />
-                </button>
-              )}
+          {/* Textarea */}
+          <div className="flex-1 min-w-0">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={isLoading ? "Nexio is thinking..." : "Message Nexio..."}
+              disabled={isLoading || !enabled}
+              className="w-full bg-transparent border-none outline-none resize-none text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 text-base leading-relaxed max-h-[200px] min-h-[24px] px-1 py-1.5"
+              rows={1}
+              aria-label="Message input"
+            />
+          </div>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,.pdf,.txt,.md,.csv"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-edge text-ink-muted transition hover:border-cyan/40 hover:text-ink"
-                aria-label="Attach file"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-
-              <button
-                onClick={handleMicClick}
-                className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
-                  isListening
-                    ? "border-cyan bg-cyan/10 text-cyan shadow-[0_0_15px_rgba(0,229,255,0.3)]"
-                    : "border-edge text-ink-muted hover:border-cyan/40 hover:text-ink"
-                }`}
-                aria-label={isListening ? "Stop voice input" : "Start voice input"}
-                title={isListening ? "Stop" : "Speak"}
-              >
-                {isListening ? (
-                  <Square className="h-3 w-3" />
-                ) : (
-                  <Mic className="h-4 w-4" />
-                )}
-              </button>
-
-              <ModelSelectorChip
-                selected={selectedModel}
-                onSelect={onSelectModel}
-                unlockedTiers={unlockedTiers || ["Free"]}
-              />
-            </div>
-
+          {/* Action Buttons */}
+          <div className="flex items-center gap-1">
+            {/* Nexo Coder Toggle */}
             <button
-              onClick={onSend}
-              disabled={disabled || (!value.trim() && !attachedFile) || isStreaming}
-              className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-cyan text-void transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-30 hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:scale-105 active:scale-95"
+              type="button"
+              onClick={() => setShowCoder(!showCoder)}
+              className={`p-2 rounded-xl transition-colors ${
+                showCoder
+                  ? "bg-blue-500/20 text-blue-400"
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+              aria-label="Toggle Nexo Coder"
+              title="Nexo Coder"
+            >
+              <Zap className="w-5 h-5" />
+            </button>
+
+            {/* Attach Image */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="Attach image"
+              title="Attach image"
+            >
+              <Paperclip className="w-5 h-5" />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="hidden"
+              aria-label="Image upload"
+            />
+
+            {/* Voice Recording */}
+            <button
+              type="button"
+              onClick={isRecording ? stopRecording : startRecording}
+              className={`p-2 rounded-xl transition-colors ${
+                isRecording
+                  ? "bg-red-500/20 text-red-400 animate-pulse"
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+              aria-label={isRecording ? "Stop recording" : "Start voice recording"}
+              title={isRecording ? "Stop recording" : "Voice input"}
+            >
+              <Mic className="w-5 h-5" />
+            </button>
+
+            {/* Send Button */}
+            <button
+              type="submit"
+              disabled={(!input.trim() && attachedImages.length === 0) || isLoading || !enabled}
+              className={`p-2 rounded-xl transition-all duration-200 flex items-center justify-center ${
+                (input.trim() || attachedImages.length > 0) && !isLoading && enabled
+                  ? "bg-blue-500 text-white hover:bg-blue-600"
+                  : "text-gray-400 cursor-not-allowed"
+              }`}
               aria-label="Send message"
             >
-              <ArrowUp className="h-4 w-4" strokeWidth={3} />
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
+
+        {/* Nexo Coder Panel */}
+        {showCoder && <NexoCoder onClose={() => setShowCoder(false)} />}
+
+        {/* Typing Indicator */}
+        {isLoading && <TypingIndicator />}
       </div>
-    </div>
+
+      {/* Signal Indicator */}
+      <Signal chatId={chatId} />
+    </form>
   );
 }
