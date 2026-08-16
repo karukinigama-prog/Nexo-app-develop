@@ -1,14 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16T04:38:00.254Z",
+  "updatedAt": "2026-08-16T04:39:11.627Z",
   "conversations": [
     {
       "chatId": "1dd5f4df-ef55-4e9d-b0ac-8e582923371e",
-      "title": "Nexo conversation",
-      "updatedAt": "2026-08-16T04:38:00.254Z",
+      "title": "ඔබට සුපර් බේස් ඇක්සස් තියෙනවා...",
+      "updatedAt": "2026-08-16T04:39:11.627Z",
       "modelId": "nexio-1.1",
       "keywords": [
-        "ඔබට"
+        "ඔබට",
+        "බලල",
+        "යවන"
       ]
     },
     {
