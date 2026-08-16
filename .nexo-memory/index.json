@@ -1,22 +1,19 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16T04:22:01.174Z",
+  "updatedAt": "2026-08-16T04:24:17.379Z",
   "conversations": [
     {
       "chatId": "319aeddb-f311-40e6-ab95-b6fa031bb50b",
       "title": "මේ අහන්නකෝ මට ත් දේශගුණය...",
-      "updatedAt": "2026-08-16T04:22:01.174Z",
+      "updatedAt": "2026-08-16T04:24:17.379Z",
       "modelId": "nexio-1.1",
       "keywords": [
+        "read",
         "කරන",
         "යමය",
-        "analyze",
-        "attached",
         "doc",
-        "images",
-        "pages",
-        "pdf",
-        "read",
+        "github",
+        "repo",
         "අදහසක",
         "අහන",
         "ඉඳල",
