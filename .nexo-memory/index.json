@@ -1,16 +1,17 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16T04:32:56.611Z",
+  "updatedAt": "2026-08-16T04:33:53.143Z",
   "conversations": [
     {
       "chatId": "319aeddb-f311-40e6-ab95-b6fa031bb50b",
       "title": "මේ අහන්නකෝ මට ත් දේශගුණය...",
-      "updatedAt": "2026-08-16T04:32:56.611Z",
+      "updatedAt": "2026-08-16T04:33:53.143Z",
       "modelId": "nexio-1.1",
       "keywords": [
         "read",
         "කරන",
         "යමය",
+        "යවන",
         "analyze",
         "app",
         "attached",
@@ -29,8 +30,7 @@
         "එකක",
         "කරල",
         "තනව",
-        "තරම",
-        "යවන"
+        "තරම"
       ]
     }
   ]
