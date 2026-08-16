@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "chatId": "1dd5f4df-ef55-4e9d-b0ac-8e582923371e",
+  "title": "Nexo conversation",
+  "updatedAt": "2026-08-16T04:38:00.254Z",
+  "modelId": "nexio-1.1",
+  "messages": [
+    {
+      "role": "user",
+      "content": "ඔබට සුපර් බේස් ඇක්සස් තියෙනවා නේද"
+    },
+    {
+      "role": "assistant",
+      "content": "ඔව් කරුණාරත්න, මට ඔබගේ Supabase integration එක සමඟ සම්බන්ධ වීමට හැකියාව තිබෙනවා. මට database schema එක පරීක්ෂා කරන්න (inspect), table වල තියෙන දත්ත ගැන දැනගන්න සහ ඔබට අවශ්‍ය නම් database එකේ schema එක වෙනස් කරන්න (migrations) අවශ්‍ය SQL code ලියන්න සහ යෝජනා කරන්න පුළුවන්.\n\nනමුත් මතක තබා ගන්න, මට සෘජුවම database එකේ දත්ත මකා දැමීමට (delete) හෝ වෙනස් කිරීමට (update) හැකියාවක් නැහැ. මම යෝජනා කරන ඕනෑම වෙනස්කමක් ඔබගේ අනුමැතිය (Approval) ඇතිව පමණයි සිදු කරන්නේ.\n\n**මම ඔබට Supabase සම්බන්ධයෙන් උදව් කළ හැකි ආකාර කිහිපයක්:**\n\n*   **Schema Analysis:** ඔබේ database එකේ tables, columns සහ relationships මොනවාදැයි පරීක්ෂා කිරීම.\n*   **RLS Policies:** Row Level Security (RLS) policies ගැන උපදෙස් දීම.\n*   **SQL Queries:** දත්ත ලබා ගැනීමට (Select) හෝ වෙනස් කිරීමට අවශ්‍ය SQL queries ලියා දීම.\n*   **Debugging:** Database related errors වලට විසඳුම් සෙවීම.\n\n**අපි ආරම්භ කරමුද?** ඔබට දැනගන්න ඕනේ මොනවා ගැනද? (උදාහරණයක් ලෙස: \"මගේ database එකේ මොන වගේ tables තියෙනවද?\" වැනි දෙයක් අහන්න.) 😊"
+    }
+  ]
+}
