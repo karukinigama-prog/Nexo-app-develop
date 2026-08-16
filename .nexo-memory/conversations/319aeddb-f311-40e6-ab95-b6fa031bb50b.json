@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "chatId": "319aeddb-f311-40e6-ab95-b6fa031bb50b",
   "title": "මේ අහන්නකෝ මට ත් දේශගුණය...",
-  "updatedAt": "2026-08-16T04:19:57.426Z",
+  "updatedAt": "2026-08-16T04:21:42.056Z",
   "modelId": "nexio-1.1",
   "messages": [
     {
@@ -52,6 +52,14 @@
     {
       "role": "assistant",
       "content": "අනිවාර්ය ද!? කරුණාරත්න සහ අමතයි. අපි හෝ ඇති වෙනස් විට ඔබගේ අපහසුතා කරමින් දැමුණු දෙන්නද? ඞලවන්නට අදහසට අනුව මම පෙන්සෙන්න! 😊\n\nඔබට හොදමු කියවමින් දෙන්නද? Python වල සැකසුම් සහ සාමාන්‍ය කිරීමට මම දියන්නද? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Read my doc."
+    },
+    {
+      "role": "assistant",
+      "content": "I'd love to read your doc! Could you tell me the exact file path? I can see `README.md`, `LICENSE`, and various config files in the repo — just let me know which one you're referring to, or if it's a specific path like `docs/example.md`, and I'll fetch it right away."
     }
   ]
 }
