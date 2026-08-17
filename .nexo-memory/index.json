@@ -1,7 +1,20 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T07:23:25.898Z",
+  "updatedAt": "2026-08-17T07:25:21.832Z",
   "conversations": [
+    {
+      "chatId": "97b66b84-ed5a-434c-a7e4-f1b376f71b43",
+      "title": "මේ අහන්නකො මං ඔබට කරුණාවෙන්...",
+      "updatedAt": "2026-08-17T07:25:21.832Z",
+      "modelId": "craft-v3",
+      "keywords": [
+        "ඔබට",
+        "අහන",
+        "කරන",
+        "කරල",
+        "බලන"
+      ]
+    },
     {
       "chatId": "1dd5f4df-ef55-4e9d-b0ac-8e582923371e",
       "title": "ඔබට සුපර් බේස් ඇක්සස් තියෙනවා...",
