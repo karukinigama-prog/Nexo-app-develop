@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "chatId": "97b66b84-ed5a-434c-a7e4-f1b376f71b43",
+  "title": "මේ අහන්නකො මං ඔබට කරුණාවෙන්...",
+  "updatedAt": "2026-08-17T07:25:21.832Z",
+  "modelId": "craft-v3",
+  "messages": [
+    {
+      "role": "user",
+      "content": "මේ අහන්නකො මං ඔබට කරුණාවෙන් කියන්නේ මං ඔබට සුපර් බේස් කෙනෙක් කරලා තියෙන්නේ. මට ඕනේ ඔබේ හැකියාවන් පරීක්ෂා කරන්න මගේ සුපර් බේස් එකේ දැනට ඇක්ටිව් ප්‍රොජෙක්ට්ස් බලන්න"
+    },
+    {
+      "role": "user",
+      "content": "මේ අහන්නකො මං ඔබට කරුණාවෙන් කියන්නේ මං ඔබට සුපර් බේස් කෙනෙක් කරලා තියෙන්නේ. මට ඕනේ ඔබේ හැකියාවන් පරීක්ෂා කරන්න මගේ සුපර් බේස් එකේ දැනට ඇක්ටිව් ප්‍රොජෙක්ට්ස් බලන්න"
+    },
+    {
+      "role": "assistant",
+      "content": "I can see you've already connected Supabase! Let me check your projects.\n\nRepository read not verified for `supabase-task.md`. No file findings are shown for it.\n\n```\noperation: inspect\nproject_id: unknown\ntable: unknown\nsql:\nSELECT table_name \nFROM information_schema.tables \nWHERE table_schema = 'public';\n```\n\n**What I'm doing:**\nI'm attempting to inspect your database to see what tables currently exist.\n\n**What could change:**\nNothing - this is read-only inspection only.\n\n**Risk level:** None - I'm only viewing your database structure.\n\n**How success will be verified:**\nI'll list all your existing tables and their schemas.\n\nPlease provide your Supabase project ID/reference so I can proceed. Your Project ID can be found in your Supabase Dashboard at: https://supabase.com/dashboard/project/_/settings/general It looks like a string such as: `abcde12345` or `project-ref-xxx`"
+    }
+  ]
+}
