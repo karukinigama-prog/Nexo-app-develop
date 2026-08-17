@@ -1,7 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T07:35:35.970Z",
+  "updatedAt": "2026-08-17T10:12:01.866Z",
   "conversations": [
+    {
+      "chatId": "d53af056-b481-4c0d-b22b-cf9a23f22063",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-17T10:12:01.866Z",
+      "modelId": "craft-v3",
+      "keywords": [
+        "බලලද"
+      ]
+    },
     {
       "chatId": "97b66b84-ed5a-434c-a7e4-f1b376f71b43",
       "title": "මේ අහන්නකො මං ඔබට කරුණාවෙන්...",
