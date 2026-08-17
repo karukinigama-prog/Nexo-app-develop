@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "chatId": "97b66b84-ed5a-434c-a7e4-f1b376f71b43",
   "title": "මේ අහන්නකො මං ඔබට කරුණාවෙන්...",
-  "updatedAt": "2026-08-17T07:29:12.738Z",
+  "updatedAt": "2026-08-17T07:30:48.697Z",
   "modelId": "craft-v3",
   "messages": [
     {
@@ -32,6 +32,14 @@
     {
       "role": "assistant",
       "content": "I can see you've already connected Supabase! Let me check your projects.\n\n```\noperation: inspect\nproject_id: your-supabase-project-ref\ntable: unknown\nsql:\nSELECT table_name \nFROM information_schema.tables \nWHERE table_schema = 'public';\n```\n\n**What I'm doing:**\nI'll inspect your database to see what tables currently exist.\n\n**What could change:**\nNothing - this is read-only inspection only.\n\n**Risk level:** None - I'm only viewing your database structure.\n\n**How success will be verified:**\nI'll list all your existing tables and their schemas.\n\nPlease provide your Supabase project ID/reference so I can proceed. Your Project ID can be found in your Supabase Dashboard at: https://supabase.com/dashboard/project/_/settings/general\n\nIt looks like a string such as: `abcde12345` or `project-ref-xxx`"
+    },
+    {
+      "role": "user",
+      "content": "ඔබට සුබ බේස් එක පේන්නැද්ද මිත්‍රයා සෘජුව කියන්න ඔබට මන් කනෙක් කරලා නැද්ද සුපර් බේස් එක ක් නැත්නම් මගේ සුපර් බේස් එකවුන්ට් එක හිස් ද"
+    },
+    {
+      "role": "assistant",
+      "content": "ඔබ කියන්නේ \"supabase එක පේන්නැද්ද නැත්නම් මගේ සුපර් බේස් එකවුන්ට් එක හිස් දැයි\" කියලා. මෙය තේරුම් ගන්න පුළුවන්: ඔබට Supabase වෙබ් අඩවියේ ඇති project එකක් තියෙනවා, නමුත් එය ඔබේ NEXO integration එකට හරියටම සම්බන්ධ වී නැහැ හෝ එහි අයිතියන් නැවත ඉල්ලා ගත යුතුය.\n\nඔබගේ Supabase project එකේ දත්ත හොඳින්ම බැලුණු කරන්න හැක්කේ ඔබගේ **Project Reference** එක දීමෙන් පසු. එය සෙලෙසූල්ව තම දී ගත හැකිය:\n\n```\nSupabase URL: https://supabase.com/dashboard/project/YOUR_PROJECT_REF/...\nProject Ref (ID): YOUR_PROJECT_REF\n```\n\nඔබට අවශ්‍යයි ඔබගේ Supabase Dashboard එකක් හෝ ඔබගේ existing project එකක් හරහා මේ `YOUR_PROJECT_REF` එක හොයා ගත හැකිය. එය උපරිම දන්න පුළුවන් තත් වන අතර, එය ඔබට භාවිතා කරන අතරට දැම්වේ.\n\nඔබට දැන් කරන්න පුළුවන් ඔබගේ **Project Ref** එක NEXO වෙත ඉල්ලා සිටීමට. එය ඇති නම්, මම තව පසුව ඔබගේ database schema එක සම්පූර්ණයෙන් පරීර්ක්ෂා කරන්න හැකිය.\n\n**හැකි විකලා කරන්න පුළුවන් දිගු කාලයක් ඇති නමු:**\n- ඔබට නිර්දේශ වූ `project_id` එක නොමැති වීම\n- ඔබගේ Supabase integration එක අක්‍රිය වූ හෝ අනීත්‍ය වූ සැකැහැත් ඇති වීම\n\nඔබට අවශ්‍යයි මම ඔබේ project reference එක දීමෙන් පසු ඔබගේ database එකේ තොරතුරු සම්පූර්ණයෙන් ඉදිරිපත් කර දීමට. එය ඔබගේ dashboard එකේ සිට ලොවිස් වශයෙන් ලබා ගත හැකිය.\n\n**හැක්ඛැමී:** ඔබට පැහැදිලි කිරීමක් අවශ්‍යයි නම්, ඔබගේ Supabase project reference එක දීමෙන් පසු මම තත් වන අතරට දැම්වේ. එය ඔබට භාවිතා කරන අතරට දැම්වේ."
     }
   ]
 }
