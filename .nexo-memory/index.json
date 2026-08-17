@@ -1,27 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T07:22:08.869Z",
+  "updatedAt": "2026-08-17T07:23:25.898Z",
   "conversations": [
     {
       "chatId": "1dd5f4df-ef55-4e9d-b0ac-8e582923371e",
       "title": "ඔබට සුපර් බේස් ඇක්සස් තියෙනවා...",
-      "updatedAt": "2026-08-17T07:22:08.869Z",
+      "updatedAt": "2026-08-17T07:23:25.898Z",
       "modelId": "craft-v3",
       "keywords": [
         "එකක",
         "ඔබට",
         "කරන",
+        "බලන",
         "you",
         "නටමත",
         "පටන",
-        "බලන",
+        "බලල",
         "හදන",
         "can",
         "connected",
         "projects",
         "superbase",
+        "tables",
         "view",
-        "බලල",
         "යවන"
       ]
     },
