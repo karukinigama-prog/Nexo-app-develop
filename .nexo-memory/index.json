@@ -1,18 +1,19 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T07:25:21.832Z",
+  "updatedAt": "2026-08-17T07:28:36.707Z",
   "conversations": [
     {
       "chatId": "97b66b84-ed5a-434c-a7e4-f1b376f71b43",
       "title": "මේ අහන්නකො මං ඔබට කරුණාවෙන්...",
-      "updatedAt": "2026-08-17T07:25:21.832Z",
+      "updatedAt": "2026-08-17T07:28:36.707Z",
       "modelId": "craft-v3",
       "keywords": [
         "ඔබට",
         "අහන",
         "කරන",
         "කරල",
-        "බලන"
+        "බලන",
+        "කරනවද"
       ]
     },
     {
