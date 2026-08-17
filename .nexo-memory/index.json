@@ -1,20 +1,26 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T07:21:13.533Z",
+  "updatedAt": "2026-08-17T07:22:08.869Z",
   "conversations": [
     {
       "chatId": "1dd5f4df-ef55-4e9d-b0ac-8e582923371e",
       "title": "ඔබට සුපර් බේස් ඇක්සස් තියෙනවා...",
-      "updatedAt": "2026-08-17T07:21:13.533Z",
-      "modelId": "nexio-1.1",
+      "updatedAt": "2026-08-17T07:22:08.869Z",
+      "modelId": "craft-v3",
       "keywords": [
         "එකක",
         "ඔබට",
         "කරන",
+        "you",
         "නටමත",
         "පටන",
         "බලන",
         "හදන",
+        "can",
+        "connected",
+        "projects",
+        "superbase",
+        "view",
         "බලල",
         "යවන"
       ]
