@@ -1,7 +1,23 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T05:10:27.526Z",
+  "updatedAt": "2026-08-18T06:29:50.425Z",
   "conversations": [
+    {
+      "chatId": "121dcf3b-eb9d-42cb-9d13-7e37703a5f5b",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-18T06:29:50.425Z",
+      "modelId": "nexio-1.1",
+      "keywords": [
+        "files",
+        "attached",
+        "analyze",
+        "available",
+        "jpg",
+        "prepared",
+        "screenshot_20260814_160045_com_android_chrome_customtabactivity",
+        "you"
+      ]
+    },
     {
       "chatId": "c6cc9b27-12c5-45f4-b90a-72e1dfae0225",
       "title": "Uploaded files: we_are_nexo.mp4",
