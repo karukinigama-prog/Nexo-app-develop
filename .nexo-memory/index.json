@@ -1,13 +1,15 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T04:07:06.899Z",
+  "updatedAt": "2026-08-18T04:07:50.602Z",
   "conversations": [
     {
       "chatId": "d31e0959-0cb6-4530-817e-00b92b5af17f",
       "title": "මගේ සුපර් බේස් ටේබල් බලනවද...",
-      "updatedAt": "2026-08-18T04:07:06.899Z",
+      "updatedAt": "2026-08-18T04:07:50.602Z",
       "modelId": "nexio-1.1",
       "keywords": [
+        "ඔබට",
+        "කරන",
         "කරල",
         "බලන",
         "බලනවද",
