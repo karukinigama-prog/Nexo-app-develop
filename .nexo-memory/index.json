@@ -1,7 +1,18 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T10:12:01.866Z",
+  "updatedAt": "2026-08-18T03:41:25.438Z",
   "conversations": [
+    {
+      "chatId": "0bf4d882-4f06-409e-8292-f1ba3e4d4a77",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-18T03:41:25.438Z",
+      "modelId": "nexio-1.1",
+      "keywords": [
+        "ඔබට",
+        "කරල",
+        "බලන"
+      ]
+    },
     {
       "chatId": "d53af056-b481-4c0d-b22b-cf9a23f22063",
       "title": "Nexo conversation",
