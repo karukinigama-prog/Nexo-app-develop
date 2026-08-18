@@ -1,7 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T04:10:30.747Z",
+  "updatedAt": "2026-08-18T04:26:11.077Z",
   "conversations": [
+    {
+      "chatId": "8cc979ee-a09a-489e-b60a-4c91af6ca331",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-18T04:26:11.077Z",
+      "modelId": "nexio-1.1",
+      "keywords": [
+        "කරන"
+      ]
+    },
     {
       "chatId": "d31e0959-0cb6-4530-817e-00b92b5af17f",
       "title": "මගේ සුපර් බේස් ටේබල් බලනවද...",
