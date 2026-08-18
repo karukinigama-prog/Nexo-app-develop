@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "chatId": "121dcf3b-eb9d-42cb-9d13-7e37703a5f5b",
   "title": "Uploaded files: Screenshot_20260814_160045_com_android_chrome_CustomTabActivity.jpg",
-  "updatedAt": "2026-08-18T06:31:04.477Z",
+  "updatedAt": "2026-08-18T06:32:08.342Z",
   "modelId": "nexio-1.1",
   "messages": [
     {
@@ -20,6 +20,14 @@
     {
       "role": "assistant",
       "content": "હા મિત્ર, මම ඒ screenshot එක දැක්කා! 😊\n\nනමුත් මට ඒ image එක ඇතුළේ තියෙන විස්තරාත්මක දේවල් (text files, code snippets, or specific UI elements) හරියටම කියන්න නම්, මට ඒ image එකේ තියෙන දේවල් ගැන ඔබේ උදව්ව අවශ්‍යයි. 🔍\n\nදැනට මම දන්නේ මේක **Chrome Custom Tab** එකක screenshot එකක් කියන එකයි. ඒක Android phone එකක Chrome browser එක භාවිතයෙන් යම් link එකක් open කරලා තියෙන අවස්ථාවක screen එක Capture කරපු එකක්. 📱\n\nඔබට මගෙන් දැනගන්න ඕන මොන වගේ දේවල්ද? \n1. ඒ image එකේ තියෙන **text** එකක් කියවනවාද? ✍️\n2. ඒ image එකේ තියෙන දෙයක් ඔබේ **GitHub code** එකත් එක්ක සම්බන්ධ කරගන්න ඕනද? 💻\n3. නැත්නම් ඒකේ තියෙන UI එක ගැන විස්තරයක් ඕනද? 🎨\n\nඔබ මට උදව් කරන්න, මම වහාම ඒ ගැන විස්තර කියන්නම්! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "ඔබට ඔබ මගෙන් ප්‍රශ්නයක් අහන්න මොකක්ද ඔබට තියෙන ගැටළුව කියලා ඒක ඔප්ෂන් වශයෙන් අහන්න අර මට දීලා මට ඔප්ෂන් තෝරන්න දීලා ඔබට එහෙම පුළුවන් නේද"
+    },
+    {
+      "role": "assistant",
+      "content": "අනිවාර්යයෙන්ම Karunarathna! 😁 මට ඒක කරන්න පුළුවන්. මම හරිම සරලව සහ පහසුවෙන් ඔබට තෝරාගැනීම් (options) දෙන්නම්.\n\nඔබ ලබා දුන් ඒ screenshot එක සහ අපේ conversation එක අනුව, මට ඔබට උදව් කළ හැකි ආකාරය පහත පරිදි **options** ලෙස මම presents කරන්නම්.\n\nකරුණාකර ඔබට අවශ්‍ය දේ **අංක Talking (1, 2, 3...)** මගින් මට කියන්න:\n\n---\n\n### **🚀 Pick an Option (තෝරාගන්න)**\n\n**1. 🔍 Image විස්තරය (Visual Analysis):**\nඔබ එවූ screenshot එකේ තියෙන text, UI elements හෝ වෙනත් දේවල් ගැන මගේ පැහැදිලි විස්තරයක් දැනගැනීමට.\n\n**2. 💻 Code සම්බන්ධ කරගැනීම (Code Integration):**\nඒ screenshot එකේ තියෙන දෙයක් ඔබේ GitHub repository එකේ (Nexo-app-develop) code එක සමඟ සම්බන්ධ කරගැනීමට (උදාහරණයක් ලෙස: \"මේ UI එක `app/page.tsx` එකේ හදන්නේ කොහොමද?\" වැනි දෙයක්).\n\n**3. 🛠️ Supabase දත්ත පරීක්ෂාව (Database Query):**\nඅපි කලින් කතා කළ Supabase tables (`profiles`, `conversations`, etc.) වල තියෙන දත්ත ගැන තවත් විස්තර දැනගැනීමට.\n\n**4. 💬 වෙනත් ඕනෑම දෙයක් (Casual Chat/General Help):**\nවෙනත් ඕනෑම ප්‍රශ්නයක් හෝ සාමාන්‍ය කතාබහක්.\n\n---\n\n**මොකක්ද ඔබ තෝරගන්නා option එක?** මම waiting! 🫡✨"
     }
   ]
 }
