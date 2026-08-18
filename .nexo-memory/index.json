@@ -1,7 +1,39 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T05:04:09.415Z",
+  "updatedAt": "2026-08-18T05:06:42.000Z",
   "conversations": [
+    {
+      "chatId": "c6cc9b27-12c5-45f4-b90a-72e1dfae0225",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-18T05:06:42.000Z",
+      "modelId": "nexio-1.1",
+      "keywords": [
+        "c2pa",
+        "google",
+        "us1",
+        "goog",
+        "http",
+        "pki",
+        "llc1",
+        "ica",
+        "core",
+        "crt0",
+        "g30",
+        "jumb",
+        "---",
+        "c2pa-ocsp",
+        "cbor",
+        "expathe",
+        "media",
+        "assertions",
+        "files",
+        "hash",
+        "jumbf",
+        "llc1-0",
+        "self",
+        "services"
+      ]
+    },
     {
       "chatId": "8cc979ee-a09a-489e-b60a-4c91af6ca331",
       "title": "මගේ සුපර් බේස් ටේබල්ස් පරීක්ෂා...",
