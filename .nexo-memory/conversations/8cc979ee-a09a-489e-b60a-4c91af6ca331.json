@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "chatId": "8cc979ee-a09a-489e-b60a-4c91af6ca331",
   "title": "මගේ සුපර් බේස් ටේබල්ස් පරීක්ෂා...",
-  "updatedAt": "2026-08-18T05:03:02.958Z",
+  "updatedAt": "2026-08-18T05:03:45.365Z",
   "modelId": "brainex-10.8",
   "messages": [
     {
@@ -44,6 +44,14 @@
     {
       "role": "assistant",
       "content": "කරුණාරත්න, ඔබට එකී සාමාන්‍ය ප්‍රශ්නය “Supabase tables පරීක්ෂා කරන්න” යන විස්තරය යටතේ ඉල්ලීමයි. Something safe.\n\n**මම කළ හැක්කේ**\n\n- **Read‑only කිරීම**: ඔබගේ `public` schema එකේ තිබෙන tables → column definitions → data types → nullability → defaults.  \n- **No changes**: මෙම ක්‍රියාවට **UPDATE / DELETE / ALTER** වැනි destructive operations ඇතුල් නොවේ.  \n\n---\n\n### ක්‍රියාත්මක කිරීම\n\n```supabase-task\noperation: inspect\nproject_id: gvqjuljvnmtwpepoalql\ntable: unknown\nsql:\nSELECT\n  table_name,\n  column_name,\n  data_type,\n  is_nullable,\n  column_default\nFROM information_schema.columns\nWHERE table_schema = 'public'\nORDER BY table_name, ordinal_position;\n```\n\n**මෙහි**  \n- `project_id` – ඔබcompat කරන්න input\n- `operate` – `inspect` කියන read‑only operation  \n- `table: unknown` – whole `public` schema එක භාවිතාව\n- Result – list of all tables with column metadata\n\n---\n\n## Integration report  \n- **Target**: Supabase Project (`gvqjuljvnmtwpepoalql`)  \n- **Inspections completed**: Inspect query prepared  \n- **Approved actions executed**: None yet (read‑only)  \n- **Verification result**: Awaiting response  \n- **Next safe step**: Once the query returns, I will present the structured table list.\n\nLet me know if you want anything further (e.g., specific table rows, filtering, etc.)."
+    },
+    {
+      "role": "user",
+      "content": "තව මොනාද ටේබල් තියෙන්නේ"
+    },
+    {
+      "role": "assistant",
+      "content": "කරුණාරත්න, ඔබගේ `public` schema එකේ දැනට තිබෙන tables මෙන්න:\n\n| Table name                | Short description (what it stores) |\n|---------------------------|------------------------------------|\n| `conversations`           | Chat sessions / conversation metadata |\n| `messages`                | Individual chat messages |\n| `profiles`                | User profile information (you just saw its columns) |\n| `screen_share_sessions`   | Screen‑sharing session records |\n| `user_settings`           | Per‑user preference / configuration data |\n\nIf you’d like to see the column names, data types, nullability, or default values for any of these tables (e.g., `messages` or `user_settings`), just let me know which one and I’ll run a read‑only schema query for you. 🚀"
     }
   ]
 }
