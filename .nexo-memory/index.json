@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T04:09:15.300Z",
+  "updatedAt": "2026-08-18T04:09:43.518Z",
   "conversations": [
     {
       "chatId": "d31e0959-0cb6-4530-817e-00b92b5af17f",
       "title": "මගේ සුපර් බේස් ටේබල් බලනවද...",
-      "updatedAt": "2026-08-18T04:09:15.300Z",
+      "updatedAt": "2026-08-18T04:09:43.518Z",
       "modelId": "nexio-1.1",
       "keywords": [
+        "approved",
         "table",
         "ඔබට",
         "කරන",
