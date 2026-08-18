@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "chatId": "d31e0959-0cb6-4530-817e-00b92b5af17f",
+  "title": "Nexo conversation",
+  "updatedAt": "2026-08-18T04:05:46.399Z",
+  "modelId": "nexio-1.1",
+  "messages": [
+    {
+      "role": "user",
+      "content": "මගේ සුපර් බේස් ටේබල් බලනවද කරුණාකරලා\n\n[Verified Supabase read executed by Nexo]\nVERIFIED SUPABASE SCHEMA RESULT — project gvqjuljvnmtwpepoalql. Public tables returned: conversations, messages, profiles, screen_share_sessions, user_settings. RLS policies returned: 18. This result is complete for this read; do not say you are waiting for Supabase."
+    },
+    {
+      "role": "assistant",
+      "content": "```supabase-live-read\nstate: success\nkind: schema\nproject_id: gvqjuljvnmtwpepoalql\ntitle: Verified Supabase schema result\nmessage: 5 public tables returned from Supabase just now.\ntables: [\"conversations\",\"messages\",\"profiles\",\"screen_share_sessions\",\"user_settings\"]\ncolumns: []\npolicy_count: 18\n```කරුණාරත්න, ඔබගේ Supabase project එකේ (ID: `gvqjuljvnmtwpepoalql`) දැනට තිබෙන tables මොනවාද කියා මම දැන් බැලුවා. 😊\n\nඔබගේ database එකේ `public` schema එකේ පහත සඳහන් tables තිබෙනවා:\n\n| Table Name | Description |\n| :--- | :--- |\n| `conversations` | සංවාද (Conversations) පිළිබඳ දත්ත |\n| `messages` | messages පිළිබඳ දත්ත |\n| `profiles` | பயனர் profile පිළිබඳ දත්ත |\n| `screen_share_sessions` | screen share sessions පිළිබඳ දත්ත |\n| `user_settings` | ഉപsetings පිළිබඳ දත්ත |\n\nඑමෙන්ම, දත්ත ආරක්ෂා කිරීම සඳහා (Security) **RLS policies 18 ක්** දැනට ක්‍රියාත්මක වෙමින් පවතිනවා. 🛡️\n\n**Integration report**\n**Target:** Supabase Project (`gvqjuljvnmtwpepoalql`)\n**Inspections completed:** Table lists and RLS count verified.\n**Approved actions executed:** None\n**Verification result:** Tables identified: `conversations`, `messages`, `profiles`, `screen_share_sessions`, `user_settings`.\n**Next safe step:** ඔබට අවශ්‍ය නම් මෙම tables වල column details (structure) පරීක්ෂා කිරීමට හෝ දත්ත (data) බැලීමට මට පුළුවන්. මොනවාද අපි ඊළඟට කරන්නේ? 😊"
+    }
+  ]
+}
