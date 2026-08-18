@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T03:42:29.758Z",
+  "updatedAt": "2026-08-18T03:44:11.840Z",
   "conversations": [
     {
       "chatId": "0bf4d882-4f06-409e-8292-f1ba3e4d4a77",
       "title": "මම ඔබට සුපර් බේස් කෙනෙක්...",
-      "updatedAt": "2026-08-18T03:42:29.758Z",
+      "updatedAt": "2026-08-18T03:44:11.840Z",
       "modelId": "nexio-1.1",
       "keywords": [
+        "බලන",
         "ඔබට",
-        "කරල",
-        "බලන"
+        "කරල"
       ]
     },
     {
