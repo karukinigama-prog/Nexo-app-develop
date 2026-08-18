@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T05:09:58.253Z",
+  "updatedAt": "2026-08-18T05:10:27.526Z",
   "conversations": [
     {
       "chatId": "c6cc9b27-12c5-45f4-b90a-72e1dfae0225",
       "title": "Uploaded files: we_are_nexo.mp4",
-      "updatedAt": "2026-08-18T05:09:58.253Z",
+      "updatedAt": "2026-08-18T05:10:27.526Z",
       "modelId": "nexio-1.1",
       "keywords": [
         "ඉවරද",
@@ -13,7 +13,8 @@
         "files",
         "mp4",
         "uploaded",
-        "we_are_nexo"
+        "we_are_nexo",
+        "වනම"
       ]
     },
     {
