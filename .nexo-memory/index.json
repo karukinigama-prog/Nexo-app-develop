@@ -1,7 +1,39 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-18T03:44:11.840Z",
+  "updatedAt": "2026-08-18T04:05:46.399Z",
   "conversations": [
+    {
+      "chatId": "d31e0959-0cb6-4530-817e-00b92b5af17f",
+      "title": "Nexo conversation",
+      "updatedAt": "2026-08-18T04:05:46.399Z",
+      "modelId": "nexio-1.1",
+      "keywords": [
+        "supabase",
+        "for",
+        "read",
+        "result",
+        "returned",
+        "verified",
+        "complete",
+        "conversations",
+        "executed",
+        "gvqjuljvnmtwpepoalql",
+        "messages",
+        "nexo",
+        "not",
+        "policies",
+        "profiles",
+        "public",
+        "rls",
+        "say",
+        "schema",
+        "screen_share_sessions",
+        "tables",
+        "user_settings",
+        "waiting",
+        "you"
+      ]
+    },
     {
       "chatId": "0bf4d882-4f06-409e-8292-f1ba3e4d4a77",
       "title": "මම ඔබට සුපර් බේස් කෙනෙක්...",
